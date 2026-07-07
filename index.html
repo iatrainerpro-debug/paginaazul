@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Claudia tiene algo que confesar</title>
+<meta property="og:title" content="Claudia va a pagar lo que hizo 👀">
+<meta property="og:description" content="Todo el mundo va a saber lo de la página azul.">
+<meta property="og:image" content="claudia-avatar.jpg">
+<style>
+  /* Tokens del design system real de 1MORE (src/index.css + tailwind.config) */
+  :root {
+    --bg-page: linear-gradient(135deg, #08082A 0%, #0d0d3d 50%, #08082A 100%);
+    --bg-page-solid: #08082A;
+    --bg-header: rgba(9, 9, 43, 0.9);
+    --bg-surface: rgba(14, 14, 52, 0.5);
+    --bg-card-hi: rgba(26, 26, 70, 0.8);
+    --border-subtle: rgba(68, 69, 104, 0.2);
+    --border-medium: rgba(68, 69, 104, 0.3);
+    --text-primary: #ffffff;
+    --text-secondary: #a8a7d1;
+    --text-muted: #64648a;
+    --brand-yellow: #FFD600;
+    --brand-electric: #4B9EFF;
+    --radius: 0.75rem;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body { height:100%; }
+  body {
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background:var(--bg-page);
+    background-attachment:fixed;
+    color:var(--text-primary);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+    display:flex; flex-direction:column;
+  }
+
+  header {
+    padding:14px 18px 12px;
+    display:flex; align-items:center; gap:12px;
+    background:var(--bg-header);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border-subtle);
+    position:relative; z-index:5;
+  }
+  .avatar {
+    width:46px; height:46px; border-radius:50%;
+    object-fit:cover;
+    border:2px solid var(--brand-electric);
+    box-shadow:0 0 14px rgba(75,158,255,.35);
+    flex-shrink:0;
+  }
+  .who { flex:1; }
+  .who b { font-size:17px; font-weight:700; letter-spacing:-.02em; display:block; }
+  .who span { font-size:12px; color:var(--text-secondary); display:flex; align-items:center; gap:5px; }
+  .who span::before {
+    content:''; width:7px; height:7px; border-radius:50%;
+    background:#3DFF88; box-shadow:0 0 8px #3DFF88;
+  }
+  .logo { height:36px; width:36px; border-radius:9px; opacity:.95; flex-shrink:0; }
+
+  #chat {
+    flex:1; overflow-y:auto;
+    padding:16px 16px 150px;
+    display:flex; flex-direction:column; gap:10px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .msg {
+    max-width:86%;
+    background:var(--bg-card-hi);
+    border:1px solid var(--border-medium);
+    border-radius:var(--radius);
+    border-bottom-left-radius:4px;
+    padding:13px 16px;
+    font-size:15.5px; line-height:1.55;
+    color:var(--text-primary);
+    opacity:0; transform:translateY(14px);
+    animation:msgIn .45s cubic-bezier(.2,.9,.3,1.2) forwards;
+    box-shadow:0 4px 16px rgba(0,0,0,.25);
+  }
+  .msg em { font-style:normal; color:var(--text-secondary); font-size:13.5px; }
+  .msg b { font-weight:700; color:#3adffa; }
+  @keyframes msgIn { to { opacity:1; transform:translateY(0); } }
+
+  .typing {
+    display:inline-flex; gap:5px; padding:15px 18px;
+    background:var(--bg-surface);
+    border:1px solid var(--border-subtle);
+    border-radius:var(--radius);
+    border-bottom-left-radius:4px;
+    width:fit-content;
+    opacity:0; animation:msgIn .3s forwards;
+  }
+  .typing i {
+    width:7px; height:7px; border-radius:50%; background:var(--text-secondary);
+    animation:bounce 1.1s infinite;
+  }
+  .typing i:nth-child(2){ animation-delay:.15s; }
+  .typing i:nth-child(3){ animation-delay:.3s; }
+  @keyframes bounce { 0%,60%,100%{ transform:translateY(0); opacity:.5;} 30%{ transform:translateY(-5px); opacity:1;} }
+
+  #actions {
+    position:fixed; left:0; right:0; bottom:0; z-index:20;
+    padding:14px 16px calc(16px + env(safe-area-inset-bottom));
+    display:flex; flex-direction:column; gap:10px;
+    background:linear-gradient(transparent, rgba(8,8,42,.85) 45%);
+  }
+  .btn {
+    font-family:inherit;
+    font-size:16px; font-weight:600;
+    padding:16px 20px; border-radius:9999px;
+    border:none; cursor:pointer;
+    width:100%; text-align:center;
+    opacity:0; transform:translateY(16px);
+    animation:msgIn .4s .1s cubic-bezier(.2,.9,.3,1.2) forwards;
+    transition:transform .12s, filter .15s;
+    text-decoration:none; display:block; color:inherit;
+  }
+  .btn:hover { filter:brightness(1.1); }
+  .btn:active { transform:scale(.95); }
+  /* CTA idéntico a Landing.tsx de 1more-app */
+  .btn.primary {
+    background:linear-gradient(135deg, #3adffa 0%, #00cbe6 100%);
+    color:#004b56;
+    font-weight:900;
+    animation:msgIn .4s .1s cubic-bezier(.2,.9,.3,1.2) forwards, cta-pulse 2.5s ease-in-out .5s infinite;
+  }
+  @keyframes cta-pulse {
+    0%, 100% { box-shadow:0 8px 32px rgba(58,223,250,.28); }
+    50%      { box-shadow:0 8px 52px rgba(58,223,250,.6); }
+  }
+  .btn.ghost {
+    background:rgba(34,211,238,.06);
+    border:2px solid rgba(34,211,238,.4);
+    color:#22D3EE;
+    font-weight:700;
+    animation-delay:.22s;
+  }
+  .btn.small {
+    font-size:14px; padding:12px 16px;
+    background:rgba(34,211,238,.06);
+    border:2px solid rgba(34,211,238,.4);
+    color:#22D3EE;
+  }
+  .btn.share {
+    background:#25D366; color:#07330f; font-weight:800;
+    animation-delay:.34s;
+  }
+
+  .footer-note {
+    text-align:center; font-size:10.5px; color:var(--text-muted);
+    padding:6px 0 2px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img class="avatar" alt="Claudia" src="data:image/jpeg;base64,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">
+  <div class="who">
+    <b>Claudia</b>
+    <span>en línea · tu asistente en 1MORE</span>
+  </div>
+  <svg class="logo" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-label="1MORE">
+    <defs>
+      <radialGradient id="bgGrad" cx="40%" cy="35%" r="65%">
+        <stop offset="0%" stop-color="#1a1a4e"/>
+        <stop offset="100%" stop-color="#09092b"/>
+      </radialGradient>
+      <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#3adffa"/>
+        <stop offset="100%" stop-color="#22D3EE"/>
+      </linearGradient>
+      <linearGradient id="whiteGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="100%" stop-color="#d0f0ff"/>
+      </linearGradient>
+    </defs>
+    <rect x="0" y="0" width="1024" height="1024" rx="220" ry="220" fill="url(#bgGrad)"/>
+    <rect x="18" y="18" width="988" height="988" rx="210" ry="210" fill="none" stroke="rgba(58,223,250,0.5)" stroke-width="8"/>
+    <text x="512" y="600" text-anchor="middle" font-family="'Space Grotesk','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="520" fill="url(#whiteGrad)" letter-spacing="-20">1</text>
+    <text x="512" y="830" text-anchor="middle" font-family="'Space Grotesk','Helvetica Neue',Arial,sans-serif" font-weight="800" font-size="148" fill="url(#cyanGrad)" letter-spacing="28">MORE</text>
+  </svg>
+</header>
+
+<div id="chat" aria-live="polite"></div>
+
+<div id="actions"></div>
+
+<div class="footer-note">campaña 1MORE · sin vecinos espiados en el proceso</div>
+
+<script>
+// ponytail: flujo lineal con setTimeout; máquina de estados si el guion crece
+const APP_STORE_URL = 'https://www.1more-app.com';
+const chat = document.getElementById('chat');
+const actions = document.getElementById('actions');
+
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+function addMsg(html) {
+  const el = document.createElement('div');
+  el.className = 'msg';
+  el.innerHTML = html;
+  chat.appendChild(el);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+async function typingThen(html, typeMs = 1100) {
+  const t = document.createElement('div');
+  t.className = 'typing';
+  t.innerHTML = '<i></i><i></i><i></i>';
+  chat.appendChild(t);
+  chat.scrollTop = chat.scrollHeight;
+  await wait(typeMs);
+  t.remove();
+  addMsg(html);
+}
+
+function setActions(buttons) {
+  actions.innerHTML = '';
+  buttons.forEach(b => {
+    const el = document.createElement(b.href ? 'a' : 'button');
+    el.className = 'btn ' + b.style;
+    el.textContent = b.label;
+    if (b.href) { el.href = b.href; el.target = '_blank'; el.rel = 'noopener'; }
+    if (b.onClick) el.addEventListener('click', b.onClick);
+    actions.appendChild(el);
+  });
+}
+
+async function start() {
+  await wait(500);
+  await typingThen(
+    `Uy. Así que viste el cartel de mi ex... 👀`,
+    1200
+  );
+  await typingThen(
+    `Vale, lo confieso 😏<br>
+     Sí, uso la página azul... <b>para entrenar</b>.<br>
+     Mi ex entrenador se puso celoso porque lo despedí por <b>Max</b>, el entrenador de 1MORE. <em>(la verdadera página azul, por si no lo pillaste)</em>`,
+    1400
+  );
+  await typingThen(
+    `¿Lo dejamos aquí, o te cuento qué es 1More y te regalo <b>7 días gratis</b> para probarlo?`,
+    1100
+  );
+  setActions([
+    { label: '🔵🎁 Sí, cuéntamelo todo', style: 'primary', onClick: routeAll },
+    { label: '😏 Solo quería el chisme', style: 'ghost', onClick: routeGossip },
+  ]);
+}
+
+async function routeAll() {
+  actions.innerHTML = '';
+  await typingThen(
+    `1More es tu app de entrenamiento con IA. <b>Max</b> te corrige la forma en tiempo real con la cámara y te resuelve las dudas al instante — sin esperar a que tenga que terminar su vida antes de contestarte. <b>Tú eres su única prioridad.</b>`,
+    1300
+  );
+  await typingThen(
+    `Plan de entrenamiento y nutrición en minutos, 100% adaptado a tu contexto y objetivo.<br><br>
+     Toma <b>7 días gratis</b>. Sin excusas esta vez. 👇`,
+    1100
+  );
+  setActions([
+    { label: '💪 Empezar mis 7 días gratis', style: 'primary', href: APP_STORE_URL },
+    shareButton(),
+  ]);
+}
+
+async function routeGossip() {
+  actions.innerHTML = '';
+  await typingThen(
+    `Justo. Y ya te vas con la mejor parte 😏<br>
+     Si algún día quieres entrenar de verdad <em>(no solo cotillear)</em>, aquí estaré.`,
+    1000
+  );
+  setActions([
+    shareButton(),
+    { label: 'Ver 1More igualmente', style: 'small', href: APP_STORE_URL },
+  ]);
+  actions.querySelector('.small').style.animation = 'msgIn .4s .3s forwards';
+}
+
+function shareButton() {
+  const text = 'Claudia va a pagar lo que hizo 👀 Todo el mundo va a saber lo de la página azul: ' + location.href;
+  return {
+    label: '📲 Mándaselo a quien le pueda venir bien la página azul',
+    style: 'share',
+    href: 'https://wa.me/?text=' + encodeURIComponent(text),
+  };
+}
+
+start();
+</script>
+</body>
+</html>
