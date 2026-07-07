@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cartel — Claudia vas a pagar</title>
+<style>
+  /* ponytail: blanco y negro, una sola fuente, cero efectos. Estética "flyer de farola casero". */
+  @page { size: A4 portrait; margin: 0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:210mm; height:297mm; }
+  body {
+    font-family:Arial, Helvetica, sans-serif;
+    background:#fff;
+    color:#000;
+    overflow:hidden;
+    position:relative;
+    padding:16mm 14mm 0;
+  }
+
+  .titulo {
+    font-size:40px;
+    font-weight:900;
+    text-transform:uppercase;
+    line-height:1.15;
+    text-align:center;
+    letter-spacing:.5px;
+  }
+
+  .cuerpo {
+    font-size:22px;
+    line-height:1.5;
+    text-align:center;
+    margin-top:9mm;
+    max-width:170mm;
+    margin-left:auto; margin-right:auto;
+  }
+  .cuerpo u { text-decoration:underline; text-decoration-thickness:2px; }
+  .cuerpo b { font-weight:900; }
+
+  .qr-wrap {
+    margin:14mm auto 0;
+    width:68mm;
+    border:2px solid #000;
+    padding:4mm;
+  }
+  .qr-wrap img { width:100%; display:block; }
+
+  .caption {
+    text-align:center;
+    font-size:17px;
+    margin-top:5mm;
+    font-style:italic;
+  }
+
+  .imprint {
+    text-align:center;
+    font-size:9px;
+    color:#888;
+    margin-top:6mm;
+  }
+
+  /* tiras para arrancar, como los carteles de "se vende" / "se busca" */
+  .tiras {
+    position:absolute;
+    left:14mm; right:14mm; bottom:6mm;
+    display:flex;
+    border-top:1px dashed #000;
+  }
+  .tira {
+    flex:1;
+    border-left:1px dashed #000;
+    writing-mode:vertical-rl;
+    text-orientation:mixed;
+    font-size:13px;
+    text-align:center;
+    padding:4mm 0;
+    letter-spacing:.5px;
+  }
+  .tira:first-child { border-left:none; }
+
+  /* Controles solo en pantalla */
+  #controles {
+    position:fixed; top:10px; right:10px; z-index:10;
+    font-family:-apple-system, sans-serif; font-size:13px;
+    background:#fff; border:1px solid #ddd; border-radius:8px; padding:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.15);
+  }
+  #controles select { font-size:13px; padding:4px; margin-left:6px; }
+  @media print { #controles { display:none; } }
+</style>
+</head>
+<body>
+
+<div id="controles">
+  Lugar: <select id="lugar" onchange="setLugar(this.value)">
+    <option value="el barrio">Farola / calle → el barrio</option>
+    <option value="el gimnasio">Gimnasio → el gimnasio</option>
+    <option value="la facultad">Universidad → la facultad</option>
+    <option value="el bar">Bar → el bar</option>
+    <option value="la oficina">Oficina → la oficina</option>
+  </select>
+</div>
+
+<div class="titulo">Claudia,<br>vas a pagar lo que me hiciste</div>
+
+<div class="cuerpo">
+  Todo <span id="lugarTxt">el barrio</span> va a saber que usas
+  <u><b>esa página azul</b></u> a escondidas.
+</div>
+
+<div class="qr-wrap">
+  <img alt="QR" src="qr.png">
+</div>
+
+<div class="imprint">campaña publicitaria 1MORE</div>
+
+<div class="tiras">
+  <div class="tira">onlyfans-claudiamore.tech</div>
+  <div class="tira">onlyfans-claudiamore.tech</div>
+  <div class="tira">onlyfans-claudiamore.tech</div>
+  <div class="tira">onlyfans-claudiamore.tech</div>
+  <div class="tira">onlyfans-claudiamore.tech</div>
+  <div class="tira">onlyfans-claudiamore.tech</div>
+  <div class="tira">onlyfans-claudiamore.tech</div>
+  <div class="tira">onlyfans-claudiamore.tech</div>
+</div>
+
+<script>
+function setLugar(v) { document.getElementById('lugarTxt').textContent = v; }
+const p = new URLSearchParams(location.search).get('lugar');
+if (p) { setLugar(p); document.getElementById('lugar').value = p; }
+</script>
+</body>
+</html>
