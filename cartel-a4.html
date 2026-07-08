@@ -96,11 +96,11 @@
 
 <div id="controles">
   Lugar: <select id="lugar" onchange="setLugar(this.value)">
-    <option value="el barrio">Farola / calle → el barrio</option>
-    <option value="el gimnasio">Gimnasio → el gimnasio</option>
-    <option value="la facultad">Universidad → la facultad</option>
-    <option value="el bar">Bar → el bar</option>
-    <option value="la oficina">Oficina → la oficina</option>
+    <option value="barrio">Farola / calle → el barrio</option>
+    <option value="gimnasio">Gimnasio → el gimnasio</option>
+    <option value="facultad">Universidad → la facultad</option>
+    <option value="bar">Bar → el bar</option>
+    <option value="oficina">Oficina → la oficina</option>
   </select>
 </div>
 
@@ -112,7 +112,7 @@
 </div>
 
 <div class="qr-wrap">
-  <img alt="QR" src="qr.png">
+  <img alt="QR" id="qrImg" src="qr-barrio.png">
 </div>
 
 <div class="imprint">campaña publicitaria 1MORE</div>
@@ -129,9 +129,21 @@
 </div>
 
 <script>
-function setLugar(v) { document.getElementById('lugarTxt').textContent = v; }
+const LUGARES = {
+  barrio:   { texto: 'el barrio' },
+  gimnasio: { texto: 'el gimnasio' },
+  facultad: { texto: 'la facultad' },
+  bar:      { texto: 'el bar' },
+  oficina:  { texto: 'la oficina' },
+};
+function setLugar(slug) {
+  const l = LUGARES[slug];
+  if (!l) return;
+  document.getElementById('lugarTxt').textContent = l.texto;
+  document.getElementById('qrImg').src = 'qr-' + slug + '.png';
+}
 const p = new URLSearchParams(location.search).get('lugar');
-if (p) { setLugar(p); document.getElementById('lugar').value = p; }
+if (p && LUGARES[p]) { setLugar(p); document.getElementById('lugar').value = p; }
 </script>
 </body>
 </html>
